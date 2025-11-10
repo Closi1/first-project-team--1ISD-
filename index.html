@@ -1,0 +1,58 @@
+# Массив для хранения истории расчётов
+$history = @()
+
+# Функция для расчета выражения
+function Calculate($a, $operation, $b) {
+    switch ($operation) {
+        '+' { $result = $a + $b }
+        '-' { $result = $a - $b }
+        '*' { $result = $a * $b }
+        '/' {
+            if ($b -ne 0) {
+                $result = $a / $b
+            } else {
+                $result = "Ошибка: деление на ноль"
+            }
+        }
+        default { throw "Недопустимая операция" }
+    }
+
+    # Добавляем запись в историю расчетов
+    $history += "$a $operation $b = $result"
+    return $result
+}
+
+# Функция отображения истории расчетов
+function Show-History() {
+    Write-Host "`n--- История вычислений ---"
+    foreach ($op in $history) {
+        Write-Host $op
+    }
+}
+
+# Основной цикл программы
+while ($true) {
+    Write-Host ""
+    Write-Host "1. Вычислить"
+    Write-Host "2. История"
+    Write-Host "3. Выход"
+
+    $choice = Read-Host "Выберите действие"
+
+    if ($choice -eq '1') {
+        $a = Read-Host "Первое число"
+        $op = Read-Host "Операция (+, -, *, /)"
+        $b = Read-Host "Второе число"
+        $result = Calculate $a $op $b
+        Write-Host "Результат: $result"
+    }
+    elseif ($choice -eq '2') {
+        Show-History
+    }
+    elseif ($choice -eq '3') {
+        break
+    }
+    else {
+        Write-Host "Невалидный выбор. Попробуйте ещё раз."
+    }
+}
